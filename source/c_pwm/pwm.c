@@ -528,8 +528,8 @@ make_pagemap(int channel)
         channels[channel].page_map[i].virtaddr[0] = 0;
         if (read(fd, &pfn, sizeof(pfn)) != sizeof(pfn))
             return fatal("rpio-pwm: Failed to read %s: %m\n", pagemap_fn);
-        if (((pfn >> 55) & 0x1bf) != 0x10c)
-            return fatal("rpio-pwm: Page %d not present (pfn 0x%016llx)\n", i, pfn);
+        if ((pfn >> 62) != 0x2)
+            return fatal("rpio-pwm: Page %d not present or swapped (pfn 0x%016llx)\n", i, pfn);
         channels[channel].page_map[i].physaddr = (uint32_t)pfn << PAGE_SHIFT | 0x40000000;
     }
     close(fd);
